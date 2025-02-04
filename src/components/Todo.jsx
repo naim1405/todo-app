@@ -2,18 +2,19 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const formatTime = (msTime) => {
 	if (msTime < 0) {
-		return `0d 0h 0m`;
+		return `0d 0h 0m 0s`;
 	}
 	const days = Math.floor(msTime / (1000 * 60 * 60 * 24));
 	const hours = Math.floor(
 		(msTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
 	);
 	const minutes = Math.floor((msTime % (1000 * 60 * 60)) / (1000 * 60));
-	return `${days}d ${hours}h ${minutes}m`;
+	const seconds = Math.floor((msTime % (1000 * 60)) / 1000);
+	return `${days}d ${hours}h ${minutes}m ${seconds}s`;
 };
 
 export function Todo({
@@ -26,9 +27,18 @@ export function Todo({
 	description,
 }) {
 	const deadlineN = new Date(deadline);
-	const remaining = deadlineN.getTime() - Date.now();
-
+	let remaining = deadlineN.getTime() - Date.now();
 	const [remainingTime, setRemainingTime] = useState(formatTime(remaining));
+	const deadlineCountDown = useRef(null);
+
+	deadlineCountDown.current = setInterval(() => {
+		remaining = deadlineN.getTime() - Date.now();
+		setRemainingTime(formatTime(remaining));
+		if (remaining == 0) {
+			clearInterval(deadlineCountDown.current);
+			deadlineCountDown.current = null;
+		}
+	}, 1000);
 
 	async function deleteClick() {
 		const r = await fetch(
