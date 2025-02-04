@@ -32,7 +32,8 @@ export function CreateTodoModal({ updateTodos }) {
 	const [priority, setPriority] = useState("0");
 
 	async function createTodoClick() {
-		let date = new Date(`${deadline} ${deadTime}`);
+		let date = new Date(`${deadline} ${deadTime}z`);
+
 		date = date.toISOString();
 		const body = {
 			title: title,
