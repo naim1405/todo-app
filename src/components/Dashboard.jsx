@@ -70,6 +70,7 @@ export function Dashboard() {
 										is_completed={value.is_completed}
 										id={value.id}
 										updateTodos={getTodos}
+										deadline={value.deadline}
 									/>
 								);
 							return <></>;
