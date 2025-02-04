@@ -7,6 +7,7 @@ import { Dashboard } from "./components/Dashboard";
 import { Toaster } from "react-hot-toast";
 import NavBar from "./components/NavBar";
 import StopWatch from "./components/StopWatch";
+import Profile from "./components/Profile";
 function App() {
 	return (
 		<>
@@ -18,6 +19,7 @@ function App() {
 					<Route path="/signup" element={<Create />} />
 					<Route path="/dashboard" element={<Dashboard />} />
 					<Route path="/stopwatch" element={<StopWatch />} />
+					<Route path="/profile" element={<Profile />} />
 				</Routes>
 			</Router>
 			<Toaster />

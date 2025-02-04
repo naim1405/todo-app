@@ -65,6 +65,15 @@ const NavBar = () => {
 							<Button
 								variant="h6"
 								color="inherit"
+								onClick={() => navigate("/profile")}
+							>
+								Profile
+							</Button>
+						)}
+						{username && (
+							<Button
+								variant="h6"
+								color="inherit"
 								onClick={() => logoutClick()}
 							>
 								Log Out
