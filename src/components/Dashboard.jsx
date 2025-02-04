@@ -12,6 +12,7 @@ export function Dashboard() {
 
 	const [todolist, setTodoList] = useState([]);
 	const [search, setSearch] = useState("");
+	const [priority, setPriority] = useState("");
 
 	async function getTodos() {
 		const r = await fetch(
@@ -55,12 +56,22 @@ export function Dashboard() {
 							onChange={(e) => setSearch(e.target.value)}
 						/>
 					</div>
+
+					<div style={{ padding: "10px" }}>
+						<TextField
+							fullWidth
+							placeholder="Priority"
+							value={priority}
+							onChange={(e) => setPriority(e.target.value)}
+						/>
+					</div>
 					<div>
 						{todolist.map((value, index) => {
 							if (
 								value.title
 									.toLowerCase()
-									.includes(search.toLowerCase())
+									.includes(search.toLowerCase()) &&
+								(priority == "" || value.priority == priority)
 							)
 								return (
 									<Todo
