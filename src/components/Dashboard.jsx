@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
 import { CreateTodoModal } from "./CreateTodoModal";
+import { Stack } from "@mui/material";
 
 export function Dashboard() {
 	const navigate = useNavigate();
@@ -13,6 +14,7 @@ export function Dashboard() {
 	const [todolist, setTodoList] = useState([]);
 	const [search, setSearch] = useState("");
 	const [priority, setPriority] = useState("");
+	const [sortBy, setSortBy] = useState("none");
 
 	async function getTodos() {
 		const r = await fetch(
@@ -20,6 +22,7 @@ export function Dashboard() {
 		);
 		const j = await r.json();
 		setTodoList(j);
+		setSortBy("none");
 		console.log(j);
 	}
 
@@ -27,6 +30,37 @@ export function Dashboard() {
 		if (!username) navigate("/login");
 		getTodos();
 	}, []);
+
+	useEffect(() => {
+		let sortedList = [...todolist];
+
+		if (sortBy == "none") {
+			sortedList.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+			console.log(todolist);
+		} else if (sortBy == "priority") {
+			sortedList.sort(
+				(a, b) => -parseInt(a.priority) + parseInt(b.priority)
+			);
+			console.log(todolist);
+		} else if (sortBy == "deadline") {
+			sortedList.sort((a, b) => {
+				const d1 = new Date(a.deadline);
+				const d2 = new Date(b.deadline);
+				return d1.getTime() - d2.getTime();
+			});
+
+			console.log(todolist);
+		} else if (sortBy == "c_time") {
+			sortedList.sort((a, b) => {
+				const d1 = new Date(a.created_at);
+				const d2 = new Date(b.created_at);
+				return d1.getTime() - d2.getTime();
+			});
+
+			console.log(todolist);
+		}
+		setTodoList(sortedList);
+	}, [sortBy]);
 
 	return (
 		<>
@@ -64,6 +98,44 @@ export function Dashboard() {
 							value={priority}
 							onChange={(e) => setPriority(e.target.value)}
 						/>
+					</div>
+					<div style={{ padding: "10px" }}>
+						Sort By
+						<Button
+							variant={
+								sortBy == "none" ? "contained" : "outlined"
+							}
+							sx={{ margin: 1 }}
+							onClick={() => setSortBy("none")}
+						>
+							None
+						</Button>
+						<Button
+							variant={
+								sortBy == "priority" ? "contained" : "outlined"
+							}
+							sx={{ marginRight: 1 }}
+							onClick={() => setSortBy("priority")}
+						>
+							Priority
+						</Button>{" "}
+						<Button
+							variant={
+								sortBy == "deadline" ? "contained" : "outlined"
+							}
+							sx={{ marginRight: 1 }}
+							onClick={() => setSortBy("deadline")}
+						>
+							Deadline
+						</Button>{" "}
+						<Button
+							variant={
+								sortBy == "c_time" ? "contained" : "outlined"
+							}
+							onClick={() => setSortBy("c_time")}
+						>
+							Created At
+						</Button>
 					</div>
 					<div>
 						{todolist.map((value, index) => {
