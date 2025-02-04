@@ -71,6 +71,7 @@ export function Dashboard() {
 										id={value.id}
 										updateTodos={getTodos}
 										deadline={value.deadline}
+										description={value.description}
 									/>
 								);
 							return <></>;

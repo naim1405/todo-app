@@ -23,11 +23,10 @@ export function Todo({
 	id,
 	updateTodos,
 	deadline,
+	description,
 }) {
 	const deadlineN = new Date(deadline);
 	const remaining = deadlineN.getTime() - Date.now();
-	console.log(title);
-	console.log(remaining);
 
 	const [remainingTime, setRemainingTime] = useState(formatTime(remaining));
 
@@ -77,7 +76,8 @@ export function Todo({
 					priority > 8 ? "rgba(255,0,0,0.3)" : "rgba(0,255,0,0.3)",
 			}}
 		>
-			<div style={{ display: "flex", justifyContent: "space-between" }}>
+			{/* <div style={{ display: "flex", justifyContent: "space-between" }}> */}
+			<div>
 				<div
 					style={{
 						fontSize: "30px",
@@ -87,9 +87,9 @@ export function Todo({
 					{is_completed ? "✅" : "⌛"}
 					{title}
 				</div>
-				<div>
-					<div>Remaining time:</div>
-					<div>{remainingTime}</div>
+				<div style={{ paddingLeft: 10 }}>
+					<div>{description}</div>
+					<div>Remaining time: {remainingTime}</div>
 				</div>
 			</div>
 			<div

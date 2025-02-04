@@ -30,6 +30,7 @@ export function CreateTodoModal({ updateTodos }) {
 	const [deadline, setDeadline] = useState(getToday());
 	const [deadTime, setDeadTime] = useState("23:59:00");
 	const [priority, setPriority] = useState("0");
+	const [description, setDescription] = useState("");
 
 	async function createTodoClick() {
 		let date = new Date(`${deadline} ${deadTime}z`);
@@ -37,7 +38,7 @@ export function CreateTodoModal({ updateTodos }) {
 		date = date.toISOString();
 		const body = {
 			title: title,
-			description: "string",
+			description: description,
 			deadline: date,
 			priority: parseInt(priority),
 		};
@@ -58,6 +59,7 @@ export function CreateTodoModal({ updateTodos }) {
 		setPriority("");
 		setIsOpen(false);
 		setDeadline(getToday());
+		setDescription("");
 		updateTodos();
 	}
 	return (
@@ -78,6 +80,13 @@ export function CreateTodoModal({ updateTodos }) {
 							placeholder="Title"
 							value={title}
 							onChange={(e) => setTitle(e.target.value)}
+						/>
+
+						<h3>Description</h3>
+						<TextField
+							placeholder="description"
+							value={description}
+							onChange={(e) => setDescription(e.target.value)}
 						/>
 						<h3>Enter deadline</h3>
 						<TextField
