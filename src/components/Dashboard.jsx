@@ -36,28 +36,22 @@ export function Dashboard() {
 
 		if (sortBy == "none") {
 			sortedList.sort((a, b) => parseInt(a.id) - parseInt(b.id));
-			console.log(todolist);
 		} else if (sortBy == "priority") {
 			sortedList.sort(
 				(a, b) => -parseInt(a.priority) + parseInt(b.priority)
 			);
-			console.log(todolist);
 		} else if (sortBy == "deadline") {
 			sortedList.sort((a, b) => {
 				const d1 = new Date(a.deadline);
 				const d2 = new Date(b.deadline);
 				return d1.getTime() - d2.getTime();
 			});
-
-			console.log(todolist);
 		} else if (sortBy == "c_time") {
 			sortedList.sort((a, b) => {
 				const d1 = new Date(a.created_at);
 				const d2 = new Date(b.created_at);
 				return d1.getTime() - d2.getTime();
 			});
-
-			console.log(todolist);
 		}
 		setTodoList(sortedList);
 	}, [sortBy]);

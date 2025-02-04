@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 import toast from "react-hot-toast";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const formatTime = (msTime) => {
 	if (msTime < 0) {
@@ -27,20 +27,29 @@ export function Todo({
 	description,
 }) {
 	const deadlineN = new Date(deadline);
-	let remaining = deadlineN.getTime() - Date.now();
-	const [remainingTime, setRemainingTime] = useState(formatTime(remaining));
+	const [remainingTime, setRemainingTime] = useState(
+		formatTime(deadlineN.getTime() - Date.now())
+	);
+	const [isCountdownActive, setIsCountdownActive] = useState(true);
 	const deadlineCountDown = useRef(null);
 
-	deadlineCountDown.current = setInterval(() => {
-		remaining = deadlineN.getTime() - Date.now();
-		setRemainingTime(formatTime(remaining));
-		if (remaining == 0) {
-			clearInterval(deadlineCountDown.current);
-			deadlineCountDown.current = null;
-		}
-	}, 1000);
+	useEffect(() => {
+		if (is_completed || !isCountdownActive) return;
+
+		deadlineCountDown.current = setInterval(() => {
+			const remaining = deadlineN.getTime() - Date.now();
+			setRemainingTime(formatTime(remaining));
+			if (remaining <= 0) {
+				clearInterval(deadlineCountDown.current);
+				setIsCountdownActive(false);
+			}
+		}, 1000);
+
+		return () => clearInterval(deadlineCountDown.current);
+	}, [is_completed, isCountdownActive]);
 
 	async function deleteClick() {
+		clearInterval(deadlineCountDown.current);
 		const r = await fetch(
 			"https://5nvfy5p7we.execute-api.ap-south-1.amazonaws.com/dev/todo/" +
 				id,
@@ -53,6 +62,8 @@ export function Todo({
 		updateTodos();
 	}
 	const markDone = async () => {
+		setIsCountdownActive(false);
+		setRemainingTime(formatTime(0));
 		const r = await fetch(
 			"https://5nvfy5p7we.execute-api.ap-south-1.amazonaws.com/dev/todo/" +
 				id,
